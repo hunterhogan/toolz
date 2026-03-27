@@ -1,6 +1,6 @@
 import collections
 import operator
-from collections.abc import Callable, Mapping, MutableMapping
+from collections.abc import Callable, Hashable, Mapping, MutableMapping
 from functools import reduce
 from typing import overload
 
@@ -10,7 +10,7 @@ __all__ = ('merge', 'merge_with', 'valmap', 'keymap', 'itemmap',
            'valfilter', 'keyfilter', 'itemfilter',
            'assoc', 'dissoc', 'assoc_in', 'update_in', 'get_in')
 
-K = TypeVar('K')
+K = TypeVar('K', bound=Hashable)
 V = TypeVar('V')
 
 def _get_factory(f, kwargs):
@@ -188,7 +188,7 @@ def itemfilter(predicate, d, factory=dict):
 
 
 @overload
-def assoc(d: Mapping[K, V], key: K, value: V) -> dict[K, V]: ...
+def assoc(d: Mapping[K, V], key: K, value: V, factory: Callable[[], dict[K, V]] = dict) -> dict[K, V]: ...
 @overload
 def assoc(d: Mapping[K, V], key: K, value: V, factory: Callable[[], MutableMapping[K, V]]) -> MutableMapping[K, V]: ...
 def assoc(d: Mapping[K, V], key: K, value: V, factory: Callable[[], MutableMapping[K, V]] = dict) -> MutableMapping[K, V]:
